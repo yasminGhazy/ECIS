@@ -11,7 +11,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props);
     this.navigation = props.navigation;
-    this.onRegister =props.onRegister;
+    this.onRegister  =props.onRegister;
     this.visible =props.visible;
     console.log(this.onRegister)
     this.state = {
@@ -22,6 +22,8 @@ export default class Login extends Component {
     };
   }
  
+
+  
   onLogin = async () => {
     console.log(this.state.username, this.state.password);
     try {
@@ -34,7 +36,7 @@ export default class Login extends Component {
       this.setState({ token });
       User.login(this.state);
       
-      this.navigation.navigate('Home');
+      this.navigation.navigate('HomeStackNavigator');
     }
     catch (error) {
       console.log(error);
@@ -78,11 +80,7 @@ export default class Login extends Component {
         <TouchableOpacity >
           <Button transparent light bordered
             style={styles.Btn}
-            onPress={
-              this.onRegister
-              
-            }
-          
+            onPress={this.onRegister}
           >
             <Text style={styles.color}>Register</Text>
           </Button>

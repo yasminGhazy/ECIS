@@ -18,45 +18,45 @@ export default function Register(props) {
     const showDialog = () => setVisible(true);
     const hideDialog = () => setVisible(false);
 
-    React.useEffect(() => {
-        restfull_endpoint.get(`/Accounts/GetCurrencies`)
-            .then(({ data }) => {
-                setCurrency(data["data"]);
-                 console.log(currencies);
+    // React.useEffect(() => {
+    //     restfull_endpoint.get(`/Accounts/GetCurrencies`)
+    //         .then(({ data }) => {
+    //             setCurrency(data["data"]);
+    //              console.log(currencies);
 
-            });
+    //         });
 
-        restfull_endpoint.get(`Accounts/GetAccountTypes`)
-            .then(({ data }) => {
-                settypes(data["data"].items);
-                // console.log(types);
+    //     restfull_endpoint.get(`Accounts/GetAccountTypes`)
+    //         .then(({ data }) => {
+    //             settypes(data["data"].items);
+    //             // console.log(types);
 
-            });
-        restfull_endpoint.get(`/Branches/GetAll`)
-            .then(({ data }) => {
-                setBank(data["data"].items);
-                //  console.log(banks);
-                // console.log(banks);
-            });
-        console.log("run" ,visible)
-    },[]);
+    //         });
+    //     restfull_endpoint.get(`/Branches/GetAll`)
+    //         .then(({ data }) => {
+    //             setBank(data["data"].items);
+    //             //  console.log(banks);
+    //             // console.log(banks);
+    //         });
+    //     console.log("run" ,visible)
+    // },[]);
     const currenciesRender = () => {
-        return currencies.map((value, key) => {
-            return <Picker.Item label={value.name} value={value.name} key={key} />
+        // return currencies.map((value, key) => {
+        //     return <Picker.Item label={value.name} value={value.name} key={key} />
 
-        });
+        // });
     }
     const typeRender = () => { 
-        return types.map((value, key) => {
-            return <Picker.Item label={value.name} value={value.name} key={key} />
+        // return types.map((value, key) => {
+        //     return <Picker.Item label={value.name} value={value.name} key={key} />
 
-        });
+        // });
     }
     const setBankRender = () => { 
-        return banks.map((value, key) => {
-            return <Picker.Item label={value.bank.name} value={value.bank.name} key={key} />
+        // return banks.map((value, key) => {
+        //     return <Picker.Item label={value.bank.name} value={value.bank.name} key={key} />
 
-        });
+        // });
     }
 
     let newUser = {
