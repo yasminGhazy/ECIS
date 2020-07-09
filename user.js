@@ -43,12 +43,8 @@ class User {
         setTimeout(() => {
           
            cache.remove('user');
-           
-
            console.log("get user" ,cache.get('user'));
-        }, 10);
-       
-
+        }, 0);
     }
 
     /**

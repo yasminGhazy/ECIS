@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     input: {
         color: "black",
         alignSelf: 'center',
+        backgroundColor:"white"
 
     },
     Item: {

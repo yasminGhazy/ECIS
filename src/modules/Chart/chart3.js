@@ -12,18 +12,18 @@ export default class Chart4 extends React.PureComponent {
   constructor(props) {
     super(props);
     let { accepted, rejected, pending } = props;
-    console.log("here",accepted, rejected, pending);
+    //console.log("here",props.accepted, rejected, pending);
     const data = [{
       'id': '  pending',
-      'value': 17,
+      'value': props.pending,
     },
     {
       'id': '  rejected',
-      'value': 12,
+      'value':props.rejected,
     },
     {
       'id': 'accepted',
-      'value': 11,
+      'value': props.accepted,
     }];
 
     const colors = ['FCA311', '14213D', '70798c'];
@@ -56,11 +56,7 @@ export default class Chart4 extends React.PureComponent {
 
   render() {
     return (
-      <View
-      style={{
-        marginRight: 60,
-      }}
-    >
+    
       <Pie
         ref={this.pie}
         containerStyle={{
@@ -79,9 +75,9 @@ export default class Chart4 extends React.PureComponent {
         animate
       >
         <MyLabels />
+        {this.props.ch}
       </Pie>
-      {/* <Button title="animate" onPress={this.animate} /> */}
-    </View>
+   
 
     );
   }

@@ -1,22 +1,23 @@
+import user from './user';
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import Register from './src/modules/Users/components/Register/Register';
 import { AppLoading } from 'expo';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons';
 import 'react-native-gesture-handler';
-import Login from './src/modules/Users/components/Login/Login'
-import Home from '@Home/Home';
-import { DefaultTheme,Provider as PaperProvider } from 'react-native-paper';
-import MyComponent from './src/shared/navigator';
-import AuthStackNavigator from './src/core/AuthStack';
-import user from './user';
-import HomeStackNavigator from './src/core/HomeStack';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import HomeStackNavigator from './src/core/navigation/HomeStack';
+import AuthStackNavigator from './src/core/navigation/AuthStack';
+import { NavigationContainer } from '@react-navigation/native';
+import { Text, View, Button, StyleSheet, Platform } from 'react-native';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import Background from './src/shared/background';
 
+const style = StyleSheet.create({
+  droidSafeArea: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? 25 : 0
+  },
+});
 
 
 
@@ -28,7 +29,7 @@ const theme = {
     ...DefaultTheme.colors,
     primary: '#FCA311',
     accent: '#14213D',
-    background:'#14213D'
+    background: '#14213D'
   },
 };
 export default class App extends React.Component {
@@ -53,44 +54,28 @@ export default class App extends React.Component {
       return <AppLoading />;
     }
     return (
-      <SafeAreaProvider>
       <PaperProvider >
-        
-        <NavigationContainer   headerMode="none"  >
-          {user.isLoggedIn() ? <HomeStackNavigator/> :  <AuthStackNavigator/>}
-         
+        <NavigationContainer  >
+          {user.isLoggedIn() ? <HomeStackNavigator /> : <AuthStackNavigator />}
+
           {/* <AuthStack.Navigator initialRouteName="Register">
             <AuthStack.Screen name="HomeScreen" component={HomeScreen} />
           </AuthStack.Navigator> */}
         </NavigationContainer>
-      </PaperProvider>
-</SafeAreaProvider>
-    )
+      </PaperProvider>)
   }
 }
 
-export  function Home1() {
+export function Home1() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Home1!</Text>
     </View>
   );
 }
-export   function Home2() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home2!</Text>
-    </View>
-  );
-}
 
-export   function Home3() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home2!</Text>
-    </View>
-  );
-}
+
+
 export function Home5({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -114,14 +99,16 @@ export function Home6({ navigation }) {
     </View>
   );
 }
-export function Home4({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to home"
-        onPress={() => navigation.navigate('Home')}
-      />
-    </View>
-  );
-}
+
+{/* <PaperProvider>
+<NavigationContainer>
+  <Stack.Navigator initialRouteName="Register" screenOptions={{
+    headerShown: false
+  }}>
+    <Stack.Screen name="Register" component={Register} />
+    <Stack.Screen name="Home" component={Home} />
+    <Stack.Screen name="Login" component={Login} />
+    <Stack.Screen name="Navigator" component={MyComponent} />
+
+  </Stack.Navigator>
+</NavigationContainer></PaperProvider> */}
