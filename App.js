@@ -10,7 +10,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Text, View, Button, StyleSheet, Platform } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import Background from './src/shared/background';
+import TextHome from './src/modules/TestHome';
 
 const style = StyleSheet.create({
   droidSafeArea: {
@@ -18,8 +18,6 @@ const style = StyleSheet.create({
     paddingTop: Platform.OS === 'android' ? 25 : 0
   },
 });
-
-
 
 
 const theme = {
@@ -56,59 +54,16 @@ export default class App extends React.Component {
     return (
       <PaperProvider >
         <NavigationContainer  >
-          {user.isLoggedIn() ? <HomeStackNavigator /> : <AuthStackNavigator />}
+          {user.isLoggedIn() ? <TextHome /> : <AuthStackNavigator />}
 
           {/* <AuthStack.Navigator initialRouteName="Register">
             <AuthStack.Screen name="HomeScreen" component={HomeScreen} />
           </AuthStack.Navigator> */}
         </NavigationContainer>
-      </PaperProvider>)
+      </PaperProvider>
+      
+      )
   }
 }
 
-export function Home1() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home1!</Text>
-    </View>
-  );
-}
 
-
-
-export function Home5({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to home"
-        onPress={() => navigation.navigate('Home')}
-      />
-    </View>
-  );
-}
-
-export function Home6({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Details Screen</Text>
-      <Button
-        title="Go to home"
-        onPress={() => navigation.navigate('Home')}
-      />
-    </View>
-  );
-}
-
-{/* <PaperProvider>
-<NavigationContainer>
-  <Stack.Navigator initialRouteName="Register" screenOptions={{
-    headerShown: false
-  }}>
-    <Stack.Screen name="Register" component={Register} />
-    <Stack.Screen name="Home" component={Home} />
-    <Stack.Screen name="Login" component={Login} />
-    <Stack.Screen name="Navigator" component={MyComponent} />
-
-  </Stack.Navigator>
-</NavigationContainer></PaperProvider> */}

@@ -22,12 +22,15 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     opacity: 0.7,
     borderRadius: 30,
+    borderRadius: 30,
     marginLeft: 10
   },
   rect6Row: {
     height: 100,
     flexDirection: "row",
+    backgroundColor: "black",
     marginTop: 150,
+    opacity: 0.7,
     marginLeft: 28
   },
   rect4: {

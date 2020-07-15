@@ -18,7 +18,6 @@ export default class AccountForm extends Component {
             accounts: {},
             isLoading: true
         };
-
     }
 
     async componentDidMount() {
@@ -40,14 +39,12 @@ export default class AccountForm extends Component {
                         
                         {value.status===2 &&  <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} />}
                         {value.status===3 &&<FontAwesome name="warning" size={16} color="#FFD54F" />}
-                        
-                        
+                    
                          </Title>
                     {/* <Subheading style={{ color: "white", fontSize: 20 }}> hey</Subheading> */}
 
-                    <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>ID: {value.number}</Paragraph>
+                    <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>Card: {value.number}</Paragraph>
                     {value.status===2 &&  <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>balance :{value.balance}  </Paragraph>}
-
                 </Card.Content>
             </Card>
                
@@ -63,25 +60,45 @@ export default class AccountForm extends Component {
                   
                 </ScrollView>
                 {/* <FontAwesome name="warning" size={16} color="#FFD54F" /> */}
-                <MyComponent />
-
             </>
         )
     }
 
 }
 
-const MyComponent = () => (
-    <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-
-        onPress={() => console.log('Pressed')}
-    />
-);
-
 const styles = StyleSheet.create({
+ 
+    form: {
+        flex: 3,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 300
+
+    },
+    color: {
+        color: "black"
+    },
+
+    Btn: {
+        alignSelf: 'center',
+      
+    },
+    input: {
+        color: "black",
+        alignSelf: 'center',
+        backgroundColor:"white"
+
+    },
+    Item: {
+marginLeft:0,
+    },
+    wrapper: { marginBottom: 50 },
+    slide: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent'
+    },
     fab: {
         position: 'absolute',
         backgroundColor: "green",
@@ -97,4 +114,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 40,
         marginVertical: 10
     },
-})
+
+    text: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold'
+    }
+});

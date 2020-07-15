@@ -8,6 +8,7 @@ class Accounts {
      */
     route = '/Accounts';
 
+    
     /**
      * Fetch all Currencies from endpoint api
      */
@@ -51,10 +52,29 @@ class Accounts {
             }
         }
     }
+
+    AddBankAccount = async(params) => 
+    {
+        try {
+            const  data  = await http.post(this.route + '/AddBankAccount' , params)
+            return ("here",data.status);
+        } catch (err) {
+            return err.response.data.errors;
+        }
+    }
+    RequestNewChequeBook = async(accountNumber,numberOfPapers) => {
+        try {
+            const  data  = await http.post(this.route + `/RequestNewChequeBook?accountNumber=${accountNumber}&numberOfPapers=${numberOfPapers}`)
+            return ("here",data.status);
+        } catch (err) {
+            return err.response.data.errors;
+        }
+    }
 }
 
-
-
-
-
 export default new Accounts();
+
+
+export const account = {
+
+}

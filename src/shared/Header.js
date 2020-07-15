@@ -5,9 +5,10 @@ import React, { Component } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
-import { Appbar } from 'react-native-paper';
+import { Appbar,DataTable  } from 'react-native-paper';
 import user from '../../user';
 import Users from '../core/services/Users';
+import { Image, StyleSheet } from 'react-native';
 
 export default class CustomHeader extends Component {
   constructor(props) {
@@ -31,34 +32,76 @@ export default class CustomHeader extends Component {
   }
   logout = () => {
     user.logout();
-    props.navigation.popToTop();
+    this.props.navigation.popToTop();
 
   }
 
   render() {
-    
+
     return (
       <Appbar.Header dark style={{ backgroundColor: 'transparent' }}>
+        
+        <View style={styles.container}>
 
-       { !this.state.isLoading &&<Appbar.Content title="Hi," subtitle={`      ${this.state.firstName} ${this.state.lastName}`} />
-}
+          <Image
+            style={styles.tinyLogo}
+            source={require('./../img/logo.png')}
+          />
+
+        </View>
+       { !this.state.isLoading &&<Appbar.Content title={"Hi,"} subtitle={`      ${this.state.firstName} ${this.state.lastName}`} style={{marginTop:15}}/>}
         <Appbar.Action icon="account-tie" onPress={this.logout} />
       </Appbar.Header>
 
     )
   }
 }
-    // <Header transparent style={{ margin: 0 }}  >
-    //    {/* <Left>
-    //    <AntDesign name="home" size={24} color="white" style={{ marginLeft: 10 }} />
+   
+    const styles = StyleSheet.create({
+  
+     
+      container: {
+        marginTop:0,
+        marginLeft: 10,
+      
+      },
+      tinyLogo: {
+        width:75,
+      
+        height: 100,
+      },
+      logo: {
+        height: 58,
+      },
+    });
 
-    //     </Left>  */}
-    //   <Body>
-    //     <Title style={{ color: "white", marginLeft: 10 }}>{`${props.firstName} ${props.lastName}`}</Title>
-    //   </Body>
-    //   <Right>
-    //     <MaterialCommunityIcons name="account-tie" size={24} color="white" style={{ marginRight: 15 }} />
-    //     <Ionicons name="ios-notifications-outline" size={24} color="white" style={{ marginRight: 10 }} />
-    //     {/* <AntDesign name="logout" size={18} color="white"/> */}
-    //   </Right>
-    // </Header>}
+    const MyComponent = () => (
+      <DataTable>
+        <DataTable.Header>
+          <DataTable.Title>Dessert</DataTable.Title>
+          <DataTable.Title numeric>Calories</DataTable.Title>
+          <DataTable.Title numeric>Fat</DataTable.Title>
+        </DataTable.Header>
+    
+        <DataTable.Row>
+          <DataTable.Cell>Frozen yogurt</DataTable.Cell>
+          <DataTable.Cell numeric>159</DataTable.Cell>
+          <DataTable.Cell numeric>6.0</DataTable.Cell>
+        </DataTable.Row>
+    
+        <DataTable.Row>
+          <DataTable.Cell>Ice cream sandwich</DataTable.Cell>
+          <DataTable.Cell numeric>237</DataTable.Cell>
+          <DataTable.Cell numeric>8.0</DataTable.Cell>
+        </DataTable.Row>
+    
+        <DataTable.Pagination
+          page={1}
+          numberOfPages={3}
+          onPageChange={page => {
+            console.log(page);
+          }}
+          label="1-2 of 6"
+        />
+      </DataTable>
+    );

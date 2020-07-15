@@ -93,30 +93,6 @@ export default class RegisterForm extends React.Component {
             "branchId": this.state.branchId,
             "accountTypeId": this.state.accountTypeId   
           }));
-
-        // try {
-        //     let data= await http.post(`/Users/Register`, {
-        //         "nationalId": this.state.nationalId,
-        //         "email": this.state.email,
-        //         "userName": this.state.userName,
-        //         "phoneNumber": this.state.phoneNumber,
-        //         "firstName": this.state.firstName,
-        //         "lastName": this.state.lastName,
-        //         "address": this.state.address,
-        //         "password": this.state.password,
-        //         "confirmPassword": this.state.confirmPassword,
-        //         "accountNumber": this.state.accountNumber,
-        //         "currencyId": this.state.currencyId,
-        //         "branchId": this.state.branchId,
-        //         "accountTypeId": this.state.accountTypeId   
-        //       }
-        //     );
-        //   console.log("post", data);
-        //     // hideDialog;
-        // }
-        // catch (error) {
-        //     console.log(error.response.data.errors);
-        // }
     };
 
 
@@ -224,7 +200,6 @@ export default class RegisterForm extends React.Component {
 
                                         iconContainer: {
                                             top: 20,
-
                                         },
 
                                     }}
@@ -257,7 +232,6 @@ export default class RegisterForm extends React.Component {
                                         selectedValue={this.state.branchId}
                                         onValueChange={(value, index) => this.setState({ branchId: this.props.banks[index].id })}
                                     >
-
                                         {this.setBankRender()}
                                     </Picker>
                                 </Item>
@@ -274,7 +248,6 @@ export default class RegisterForm extends React.Component {
                                         onValueChange={(value, index) => this.setState({ currencyId: this.props.currencies[index].id })}
                                     >
                                         {this.currenciesRender()}
-
                                     </Picker>
                                 </Item>
                                 <Item picker>
@@ -315,9 +288,7 @@ export default class RegisterForm extends React.Component {
                         </Dialog.Actions>
                     </ScrollView>
                 </Dialog.ScrollArea>
-
             </Dialog>
-
         );
     }
 }

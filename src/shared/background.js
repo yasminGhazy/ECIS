@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground, StyleSheet } from 'react-native'
+import { ImageBackground, StyleSheet,Image } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Container, Text, View, Content } from 'native-base';
 import CustomHeader from './Header';
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     height: '100%',
+    opacity:0.5
   },
   container: {
     flex: 1,
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
+
     
   },
 
@@ -45,9 +47,11 @@ const styles = StyleSheet.create({
 export default function Background(props) {
   return (
     <View style={styles.container}>
-         <ImageBackground source={require('./../img/5.jpg')} style={styles.image}>
+         <ImageBackground source={require('./../img/2a5d60b374112294f2e17dfdf7b54984.jpg')} style={styles.image}>
          <LinearGradient
-                colors={['rgba(252, 163, 17,0.25)', '#000000']}
+                // colors={['rgba(150, 100, 10,0.26)', '#000000']}
+                colors={['#000','#000']}
+
                 style={styles.linearGradient}
             />
         {props.children}

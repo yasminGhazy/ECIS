@@ -1,13 +1,16 @@
 import * as React from 'react';
-import { Home1,Home5,Home6 } from '../../../App';
 import Home from '../../modules/Home/Home';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
-import Accounts from '../../modules/Accounts/Accounts';
+import Account from '../../modules/Accounts/Accounts';
 import EWallet from '../../modules/E-wallet/E-wallet';
+import Beneficiary from '../../modules/Beneficiaries/Beneficiaries';
+import Transaction from '../../modules/Transactions/Transactions';
+import AllRequests from '../../modules/Requests/Requests';
+import TestHome from '../../modules/TestHome'
 const Tab = createMaterialBottomTabNavigator();
 
 export default function HomeStackNavigator() {
@@ -23,7 +26,7 @@ export default function HomeStackNavigator() {
        
         <Tab.Screen
         name="Home"
-        component={Home}
+        component={TestHome}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color }) => (
@@ -34,8 +37,8 @@ export default function HomeStackNavigator() {
         }}
       />
         <Tab.Screen
-        name="Home1"
-        component={Home1}
+        name="Transaction"
+        component={Transaction}
         options={{
           tabBarLabel: 'Transactions',
           tabBarIcon: ({ color }) => (
@@ -55,7 +58,7 @@ export default function HomeStackNavigator() {
       />
        <Tab.Screen
         name="Home4"
-        component={Accounts}
+        component={Account}
         options={{
           tabBarLabel: 'Accounts',
           tabBarIcon: ({ color }) => (
@@ -64,8 +67,8 @@ export default function HomeStackNavigator() {
         }}
       />
       <Tab.Screen
-        name="Home5"
-        component={Home5}
+        name="Request"
+        component={AllRequests}
         options={{
           tabBarLabel: 'Requests',
           tabBarIcon: ({ color }) => (
@@ -75,8 +78,8 @@ export default function HomeStackNavigator() {
         }}
       />
             <Tab.Screen
-        name="Home6"
-        component={Home6}
+        name="Beneficiary"
+        component={Beneficiary}
         options={{
           tabBarLabel: 'Beneficiary',
           tabBarIcon: ({ color }) => (
