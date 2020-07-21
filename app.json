@@ -2,6 +2,14 @@
   "expo": {
     "name": "myNewProject",
     "slug": "myNewProject",
+    "ios": {
+      "bundleIdentifier": "com.yasminGhazy.myNewProject",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.yasminGhazy.myNewProject",
+      "versionCode": 1
+    },
     "platforms": [
       "ios",
       "android",
@@ -21,8 +29,7 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
-    }
+   
+    "description": ""
   }
 }

@@ -65,6 +65,23 @@ const styles = StyleSheet.create({
     color: "white"
 
   },
+  
+  card: {
+      display: "flex",
+      justifyContent: "center",
+      alignContent: "center",
+      alignSelf: "center",
+      borderRadius: 17,
+
+      borderColor: "#fff",
+      width: 270,
+      height: 140,
+      padding: 20
+
+  },
+
+
+
 });
 
 export default styles;

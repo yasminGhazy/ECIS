@@ -2,10 +2,10 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
   DrawerItem,
-  DrawerContentScrollView,
+  DrawerContentScrollView
 } from '@react-navigation/drawer';
+
 import {
-  useTheme,
   Avatar,
   Title,
   Caption,
@@ -16,10 +16,15 @@ import {
   Switch,
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-export function DrawerContent(props) {
+
+export default function DrawerContent(props) {
+
+const navigation = useNavigation();
+  
   return (
-    <DrawerContentScrollView {...props}>
+    <DrawerContentScrollView {...props} style={{ marginTop: 50 }}>
       <View
         style={
           styles.drawerContent
@@ -59,30 +64,30 @@ export function DrawerContent(props) {
                 size={size}
               />
             )}
-            label="Profile"
-            onPress={() => {}}
+            label="Home"
+            onPress={() => {navigation.push('Home') }}
           />
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons name="tune" color={color} size={size} />
             )}
             label="Preferences"
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons
-                name="bookmark-outline"
+                name="logout"
                 color={color}
                 size={size}
               />
             )}
-            label="Bookmarks"
-            onPress={() => {}}
+            label="Logout"
+            onPress={() => {navigation.push('Login') }}
           />
         </Drawer.Section>
         <Drawer.Section title="Preferences">
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={() => { }}>
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
               <View pointerEvents="none">
@@ -90,7 +95,7 @@ export function DrawerContent(props) {
               </View>
             </View>
           </TouchableRipple>
-          <TouchableRipple onPress={() => {}}>
+          <TouchableRipple onPress={() => { }}>
             <View style={styles.preference}>
               <Text>RTL</Text>
               <View pointerEvents="none">
@@ -107,7 +112,7 @@ export function DrawerContent(props) {
 const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
-    zIndex:3,
+    zIndex: 3,
   },
   userInfoSection: {
     paddingLeft: 20,
@@ -145,52 +150,4 @@ const styles = StyleSheet.create({
   },
 });
 
-// import * as React from 'react';
-// import { Drawer } from 'react-native-paper';
 
-// const CustomDrawer = () => {
-//   const [active, setActive] = React.useState('');
-
-
-//   return (
-//     <Drawer.Section title="Some title">
-//       <Drawer.Item
-//         label="First Item"
-//         active={active === 'first'}
-//         onPress={() => setActive('first')}
-//       />
-//       <Drawer.Item
-//         label="Second Item"
-//         active={active === 'second'}
-//         onPress={() => setActive('second')}
-//       />
-//     </Drawer.Section>
-//   );
-// };
-
-// export default CustomDrawer;
-// const Drawer = createDrawerNavigator(
-//     {
-//      Home:{ screen: Home},
-//        Chart4:{ screen: Chart4},
-//       // Settings:{ screen: Settings}
-  
-//     },
-//     {
-//       initialRouteName: "Home",
-//       unmountInactiveRoutes: true,
-//       headerMode: "none",
-//       // contentComponent: props => <Sidebar {...props} />
-//     }
-//   )
-//   const AppNavigator = createStackNavigator(
-//     {
-//       Drawer : {screen: Drawer},
-//     },
-//     {
-//       initialRouteName: "Drawer",
-//     }
-//   )
-//   const AppContainer = createAppContainer(AppNavigator);
-
-{/* <AppContainer /> */}

@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
-import CustomHeader from '../../shared/Header';
-import Background from '../../shared/background';
+import Header from '../../Shared/Header/Header';
+import Background from '../../Shared/background';
 import Swiper from 'react-native-swiper';
 import { StyleSheet, Dimensions, Text, View, ScrollView } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
@@ -109,7 +109,7 @@ export default class EWallet extends Component {
         return (
 
             <Background>
-                <CustomHeader />
+                <Header />
                 <Swiper style={styles.wrapper} activeDotColor="white" >
 
                     <View style={styles.slide}>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ImageBackground, StyleSheet,Image } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { Container, Text, View, Content } from 'native-base';
-import CustomHeader from './Header';
+import CustomHeader from './Header/Header';
 
 
 // export default function Background(props) {
@@ -60,5 +60,3 @@ export default function Background(props) {
 
   )
 }
-
-

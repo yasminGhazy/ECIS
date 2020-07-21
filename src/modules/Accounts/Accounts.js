@@ -1,6 +1,6 @@
 import * as React from 'react';
-import CustomHeader from '../../shared/Header';
-import Background from '../../shared/background';
+import Header from '../../Shared/Header/Header';
+import Background from '../../Shared/background';
 import AccountForm from './AccountForm';
 import { Text, View, StyleSheet } from 'react-native';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
@@ -41,7 +41,7 @@ export default class Account extends React.Component {
   render() {
     return (
       <Background>
-        <CustomHeader />
+        <Header />
 
         <AccountForm />
         <View style={{ margin: 20 }}>

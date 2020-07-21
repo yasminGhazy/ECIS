@@ -9,6 +9,7 @@ export default function MyLabels({ data, focus }) {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              alignContent:"space-around"
             }}
           >
             <View style={[styles.dot, { backgroundColor: arc.color }]} />
@@ -29,14 +30,13 @@ const styles = StyleSheet.create({
     flex: 0.5,
   },
   listItem: {
-    marginVertical: 10,
+    marginVertical: 5,
     marginRight: 10,
     
   },
   dot: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: 10,
+    height: 10,
     marginHorizontal: 5 ,
   },
 });

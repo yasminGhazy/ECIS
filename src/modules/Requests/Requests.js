@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import CustomHeader from '../../shared/Header';
-import Background from '../../shared/background';
 import Swiper from 'react-native-swiper';
 import { StyleSheet, Dimensions, Text, View, ScrollView } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
@@ -8,6 +6,8 @@ import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Cheques from '../../core/services/Cheques';
 import Transactions from '../../core/services/Transactions';
 import Requests from '../../core/services/Requests';
+import Background from '../../Shared/background';
+import Header from '../../Shared/Header/Header';
 
 
 const styles = StyleSheet.create({
@@ -93,7 +93,7 @@ export default class AllRequests extends Component {
         return (
 
             <Background>
-                <CustomHeader />
+                <Header />
 
                 <ScrollView style={{ marginTop: 20 }}>
                     {!this.state.isLoading && this.Request()}

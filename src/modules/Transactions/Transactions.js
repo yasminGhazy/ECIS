@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import CustomHeader from '../../shared/Header';
-import Background from '../../shared/background';
-import Swiper from 'react-native-swiper';
-import { StyleSheet, Dimensions, Text, View, ScrollView } from 'react-native';
+import Background from '../../Shared/background';
+import { StyleSheet, Dimensions, Text, View, ScrollView ,Platform } from 'react-native';
 import { Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
-import Cheques from '../../core/services/Cheques';
 import Transactions from '../../core/services/Transactions';
+import Chart4 from '../Chart/chart3';
+import {  Tab, Tabs,TabHeading } from 'native-base';
+import Header from '../../Shared/Header/Header';
 
 
 const styles = StyleSheet.create({
@@ -46,19 +46,38 @@ export default class Transaction extends Component {
         this.navigation = props.navigation;
         this.state = {
             allTransactions: {},
+            accepted: 0,
+            pending: 0,
+            rejected: 0,
 
             isLoading: true
         };
     }
 
     async componentDidMount() {
+        let accepted = 0;
+        let pending = 0;
+        let rejected = 0;
         this.setState({ allTransactions: await Transactions.GetByCurrentUser() })
-        console.log("transactions", this.state.allTransactions)
+        this.state.allTransactions.map((value, key) => {
+            if (value.status === 1)
+                accepted++;
+            else if (value.status === 2)
+                rejected++;
+            else pending++;
+
+        })
+        this.setState({ rejected, pending, accepted });
+
+        console.log(this.state.accepted, rejected, pending, this.state.allTransactions.length)
+
         this.setState({ isLoading: false });
     }
-    transactions = () => {
+    transactions = (status) => {
         return this.state.allTransactions.map((value, key) => {
-
+            // if (key == 0)
+            //     console.log(value);
+            if(value.status===status)
             return (
                 <Card style={styles.rect} key={key}>
                     <Card.Content style={{ zIndex: 3 }}>
@@ -68,7 +87,6 @@ export default class Transaction extends Component {
                             {value.status === 1 && <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} />}
                             {value.status === 2 && <Entypo name="block" size={14} color="#E57373" />}
 
-
                         </Title>
                         <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`From  ${value.senderAccount.user.firstName} ${value.senderAccount.user.lastName}`}</Paragraph>
                         <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`TO  ${value.receiverAccount.user.firstName} ${value.receiverAccount.user.lastName}`} </Paragraph>
@@ -76,36 +94,42 @@ export default class Transaction extends Component {
 
                     </Card.Content>
                 </Card>
-
             )
         });
     }
 
-
     render() {
         return (
-
             <Background>
-                <CustomHeader />
+                <Header/>
+                {!this.state.isLoading &&
+                    <> 
+                    { Platform.OS === 'android' &&
+                        <Chart4 rejected={this.state.rejected} pending={this.state.pending} accepted={this.state.accepted} />}
 
-                <ScrollView style={{ marginTop: 20 }}>
-                    {!this.state.isLoading && this.transactions()}
+                        <Tabs tabBarUnderlineStyle={{ borderBottomWidth: 6 }}>
+                           
+                            <Tab heading="Succeded" style={{ backgroundColor: "transparent" }} tabStyle={{ backgroundColor: "black" }} activeTabStyle={{ backgroundColor: "black" , color:"white"}}>
 
-                </ScrollView>
+                                <ScrollView style={{ marginTop: 20 }}>
+                                    {this.transactions(1)}
+                                </ScrollView>
+                            </Tab>
+                            <Tab heading="Pending" style={{ backgroundColor: "transparent" }} tabStyle={{ backgroundColor: "black" }} activeTabStyle={{ backgroundColor: "black" }}>
 
-                <View style={{ margin: 20 }}>
+                                <ScrollView style={{ marginTop: 20 }}>
+                                    {this.transactions(0)}
+                                </ScrollView>
+                            </Tab>
+                            <Tab heading="Failed" style={{ backgroundColor: "transparent" }} tabStyle={{ backgroundColor: "black" }} activeTabStyle={{ backgroundColor: "black" }} >
 
-                    <Text style={{ color: "white" }}>
-                        <FontAwesome name="warning" size={16} color="#FFD54F" /> Pending
-                 </Text>
-                    <Text style={{ color: "white" }}>
-                        {/* <AntDesign name="warning" size={16} color="#FFD54F" />  */}
-                        <Entypo name="block" size={14} color="#E57373" /> Failed
-                 </Text>
-                    <Text style={{ color: "white" }}>
-                        <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} /> Succeeded
-                 </Text>
-                </View>
+                                <ScrollView style={{ marginTop: 20 }}>
+                                    {this.transactions(2)}
+                                </ScrollView>
+                            </Tab>
+                        </Tabs>
+                    </>
+                }
             </Background>
         );
     }

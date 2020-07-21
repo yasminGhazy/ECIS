@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Item, Input, Label, Button, Text, Spinner, View } from 'native-base';
-import { StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import User from '../../../user'
 import http from '../../core/endpoint';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
-import Background from '../../shared/background';
-import LottieView from 'lottie-react-native';
-
+import styles from './LoginStyle';
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -23,7 +21,6 @@ export default class LoginForm extends Component {
     };
   }
 
-
   onLogin = async () => {
     console.log(this.state.username, this.state.password);
     try {
@@ -36,7 +33,7 @@ export default class LoginForm extends Component {
       this.setState({ token });
       User.login(this.state);
 
-      this.navigation.navigate('HomeStackNavigator');
+      this.navigation.push('DrawerStack');
     }
     catch (error) {
       console.log(error.response.data.errors);
@@ -45,17 +42,8 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <Background>
-        <View style={styles.container}>
-
-          <Image
-            style={styles.tinyLogo}
-            source={require('./../../img/logo.png')}
-          />
-          {/* <LottieView style={{ flex: 1 }} source={require('./../../../8721-loading (1).json')}   /> */}
-        </View>
+      <>
         <Form style={styles.form}>
-
           <Item >
             <FontAwesome name="user" size={20} color="white" />
             <Input placeholder='Email'
@@ -87,7 +75,6 @@ export default class LoginForm extends Component {
           </TouchableOpacity>
 
           <TouchableOpacity >
-
             <Button transparent light bordered
               style={styles.Btn}
               onPress={this.onRegister}
@@ -100,43 +87,7 @@ export default class LoginForm extends Component {
           </TouchableOpacity>
 
         </Form>
-      </Background>
+      </>
     );
   }
 }
-const styles = StyleSheet.create({
-  form: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 70
-
-  },
-  color: {
-    color: "white"
-  },
-
-  Btn: {
-    alignSelf: 'center',
-    margin: 15,
-  },
-  input: {
-    color: "#fff",
-    alignSelf: 'center',
-
-  },
-  container: {
-    marginTop: 10,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  tinyLogo: {
-    width:300,
-    alignSelf: "center",
-    height: 300,
-  },
-  logo: {
-    height: 58,
-  },
-});

@@ -9,8 +9,7 @@ import AuthStackNavigator from './src/core/navigation/AuthStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { Text, View, Button, StyleSheet, Platform } from 'react-native';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import TextHome from './src/modules/TestHome';
+
 
 const style = StyleSheet.create({
   droidSafeArea: {
@@ -54,16 +53,11 @@ export default class App extends React.Component {
     return (
       <PaperProvider >
         <NavigationContainer  >
-          {user.isLoggedIn() ? <TextHome /> : <AuthStackNavigator />}
+          {user.isLoggedIn() ? <HomeStackNavigator /> : <AuthStackNavigator />}
 
-          {/* <AuthStack.Navigator initialRouteName="Register">
-            <AuthStack.Screen name="HomeScreen" component={HomeScreen} />
-          </AuthStack.Navigator> */}
         </NavigationContainer>
       </PaperProvider>
-      
+    
       )
   }
 }
-
-

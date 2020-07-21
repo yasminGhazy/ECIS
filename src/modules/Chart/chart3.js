@@ -8,13 +8,13 @@ import {
   Dimensions, Button
 } from 'react-native';
 import { PieChart } from 'react-native-svg-charts'
-export default class Chart4 extends React.PureComponent {
+
+export default class Chart4 extends React.Component {
   constructor(props) {
     super(props);
     let { accepted, rejected, pending } = props;
-    //console.log("here",props.accepted, rejected, pending);
     const data = [{
-      'id': '  pending',
+      'id': 'pending',
       'value': props.pending,
     },
     {
@@ -26,7 +26,7 @@ export default class Chart4 extends React.PureComponent {
       'value': props.accepted,
     }];
 
-    const colors = ['FCA311', '14213D', '70798c'];
+    const colors = ['FFD54F', 'E57373', '81C784'];
     const pieData = data
       .filter(value => value.value > 0)
       .map((value, index) => {
@@ -66,7 +66,7 @@ export default class Chart4 extends React.PureComponent {
         }}
         pieStyle={{
           width: 200,
-          height: 240,
+          height: 140,
           flex: 1,
         }}
         outerRadius={40}
@@ -75,7 +75,7 @@ export default class Chart4 extends React.PureComponent {
         animate
       >
         <MyLabels />
-        {this.props.ch}
+       
       </Pie>
    
 
