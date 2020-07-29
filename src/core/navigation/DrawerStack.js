@@ -1,9 +1,10 @@
 import * as React from 'react';
 import HomeStackNavigator from './HomeStack';
 import Login from '../../modules/Login/Login';
-import DrawerContent from '../../modules/drawer';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useWindowDimensions } from 'react-native';
+import DrawerContent from '../../Shared/Drawer/drawer';
+import Notify from '../../modules/Notifications/Notifications';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,6 +27,11 @@ export default function DrawerStack() {
         name="Home"
         component={HomeStackNavigator}
         options={{ drawerLabel: 'Home' }}
+      />
+      <Drawer.Screen
+        name="Notification"
+        component={Notify}
+        options={{ drawerLabel: 'Notification' }}
       />
       <Drawer.Screen
         name="Logout"

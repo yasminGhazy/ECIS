@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import Background from '../../Shared/background';
-import { StyleSheet, Dimensions, Text, View, ScrollView ,Platform } from 'react-native';
-import { Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { StyleSheet, Dimensions, Text, View, ScrollView, Platform } from 'react-native';
+import { Card, Title, Paragraph, FAB, Snackbar } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Transactions from '../../core/services/Transactions';
 import Chart4 from '../Chart/chart3';
-import {  Tab, Tabs,TabHeading } from 'native-base';
+import { Tab, Tabs, TabHeading } from 'native-base';
 import Header from '../../Shared/Header/Header';
+import NetworkUtils from '../../core/NetworkUtils ';
 
 
 const styles = StyleSheet.create({
@@ -49,67 +50,71 @@ export default class Transaction extends Component {
             accepted: 0,
             pending: 0,
             rejected: 0,
-
+           connectionStatus:' Loading your Data .......',
             isLoading: true
         };
     }
 
     async componentDidMount() {
-        let accepted = 0;
-        let pending = 0;
-        let rejected = 0;
-        this.setState({ allTransactions: await Transactions.GetByCurrentUser() })
-        this.state.allTransactions.map((value, key) => {
-            if (value.status === 1)
-                accepted++;
-            else if (value.status === 2)
-                rejected++;
-            else pending++;
+        if (await NetworkUtils.isNetworkAvailable()) {
+            let accepted = 0;
+            let pending = 0;
+            let rejected = 0;
+            this.setState({ allTransactions: await Transactions.GetByCurrentUser() })
+            this.state.allTransactions.map((value, key) => {
+                if (value.status === 1)
+                    accepted++;
+                else if (value.status === 2)
+                    rejected++;
+                else pending++;
 
-        })
-        this.setState({ rejected, pending, accepted });
+            })
+            this.setState({ rejected, pending, accepted });
 
-        console.log(this.state.accepted, rejected, pending, this.state.allTransactions.length)
+            console.log(this.state.accepted, rejected, pending, this.state.allTransactions.length)
 
-        this.setState({ isLoading: false });
+            this.setState({ isLoading: false });
+        }
+        else this.setState({ connectionStatus: 'check your connections and try again' })
+
     }
     transactions = (status) => {
         return this.state.allTransactions.map((value, key) => {
             // if (key == 0)
             //     console.log(value);
-            if(value.status===status)
-            return (
-                <Card style={styles.rect} key={key}>
-                    <Card.Content style={{ zIndex: 3 }}>
-                        <Title style={{ color: "white", alignSelf: "center" }}>
+            if (value.status === status)
+                return (
+                    <Card style={styles.rect} key={key}>
+                        <Card.Content style={{ zIndex: 3 }}>
+                            <Title style={{ color: "white", alignSelf: "center" }}>
 
-                            {value.status === 0 && <FontAwesome name="warning" size={16} color="#FFD54F" />}
-                            {value.status === 1 && <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} />}
-                            {value.status === 2 && <Entypo name="block" size={14} color="#E57373" />}
+                                {value.status === 0 && <FontAwesome name="warning" size={16} color="#FFD54F" />}
+                                {value.status === 1 && <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} />}
+                                {value.status === 2 && <Entypo name="block" size={14} color="#E57373" />}
 
-                        </Title>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`From  ${value.senderAccount.user.firstName} ${value.senderAccount.user.lastName}`}</Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`TO  ${value.receiverAccount.user.firstName} ${value.receiverAccount.user.lastName}`} </Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>   {value.amount}  </Paragraph>
+                            </Title>
+                            <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`From  ${value.senderAccount.user.firstName} ${value.senderAccount.user.lastName}`}</Paragraph>
+                            <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`TO  ${value.receiverAccount.user.firstName} ${value.receiverAccount.user.lastName}`} </Paragraph>
+                            <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>   {value.amount}  </Paragraph>
 
-                    </Card.Content>
-                </Card>
-            )
+                        </Card.Content>
+                    </Card>
+                )
         });
     }
 
     render() {
         return (
             <Background>
-                <Header/>
+                <Header />
                 {!this.state.isLoading &&
-                    <> 
-                    { Platform.OS === 'android' &&
-                        <Chart4 rejected={this.state.rejected} pending={this.state.pending} accepted={this.state.accepted} />}
+                    <>
+                        {Platform.OS === 'android' &&
+                            <Chart4 rejected={this.state.rejected} pending={this.state.pending} accepted={this.state.accepted} />}
 
                         <Tabs tabBarUnderlineStyle={{ borderBottomWidth: 6 }}>
-                           
-                            <Tab heading="Succeded" style={{ backgroundColor: "transparent" }} tabStyle={{ backgroundColor: "black" }} activeTabStyle={{ backgroundColor: "black" , color:"white"}}>
+
+                            <Tab heading="Succeded" style={{ backgroundColor: "transparent" }} tabStyle={{ backgroundColor: "black" }} activeTabStyle={{ backgroundColor: "black", color: "white" }}>
 
                                 <ScrollView style={{ marginTop: 20 }}>
                                     {this.transactions(1)}
@@ -130,6 +135,12 @@ export default class Transaction extends Component {
                         </Tabs>
                     </>
                 }
+                <Snackbar
+                    visible={this.state.isLoading}
+                // onDismiss={onDismissSnackBar}
+                >
+                     {this.state.connectionStatus}
+                </Snackbar>
             </Background>
         );
     }

@@ -10,7 +10,7 @@ const Home = ({navigation})=> {
             <Background>
                 <Header navigation={navigation} />
                 <Slider />
-                <HomeButtons />
+                <HomeButtons navigation={navigation} />
             </Background>
         )
 }

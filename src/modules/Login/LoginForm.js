@@ -6,6 +6,9 @@ import http from '../../core/endpoint';
 import { FontAwesome } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import styles from './LoginStyle';
+import * as Animatable from 'react-native-animatable';
+import { Snackbar, HelperText } from 'react-native-paper';
+import NetworkUtils from '../../core/NetworkUtils ';
 
 export default class LoginForm extends Component {
   constructor(props) {
@@ -17,27 +20,46 @@ export default class LoginForm extends Component {
       username: '',
       password: '',
       token: '',
-
+      showError: false,
+      Error: '',
+      connectError: false
     };
-  }
 
+  }
+  // checkConnection =async () => {
+  //   if (await NetworkUtils.isNetworkAvailable())
+  //     this.setState({ connectError: true })
+  //   else
+  //     this.setState({ connectError: true })
+  // }
   onLogin = async () => {
+
     console.log(this.state.username, this.state.password);
+
     try {
       let { data } = await http.post('/Users/Login', {
         "email": this.state.username,
         "password": this.state.password,
       })
-      //console.log("current", data);
+      console.log("current", data);
       let token = data["data"].token;
       this.setState({ token });
-      User.login(this.state);
+      User.login({
+        username: this.state.username,
+        password: this.state.password,
+        token: this.state.token,
+      });
+      if (data.succeeded) {
 
-      this.navigation.push('DrawerStack');
+        this.navigation.push('DrawerStack');
+      }
+
     }
     catch (error) {
-      console.log(error.response.data.errors);
+      console.log("invalid data ");
+      this.setState({ Error: "invalid data", showError: true })
     }
+
   }
 
   render() {
@@ -50,7 +72,11 @@ export default class LoginForm extends Component {
               placeholderTextColor="white"
               style={styles.input}
               value={this.state.username}
-              onChangeText={(username) => this.setState({ username })}
+              onChangeText={(username) => {
+                this.setState({ username })
+                this.setState({ showError: false });
+
+              }}
             />
           </Item>
 
@@ -63,17 +89,22 @@ export default class LoginForm extends Component {
               value={this.state.password}
               onChangeText={(password) => this.setState({ password })}
             />
+
           </Item>
-
+          <HelperText type="error" visible={this.state.showError}>
+            {this.state.Error}
+          </HelperText>
           <TouchableOpacity >
-            <Button transparent light bordered
-              style={styles.Btn}
-              onPress={this.onLogin}
-            >
-              <Text style={styles.color}>Login</Text>
-            </Button>
+            <Animatable.View animation="zoomIn">
+              <Button transparent light bordered
+                style={styles.Btn}
+                onPress={this.onLogin}
+              >
+                <Text style={styles.color}>Login</Text>
+              </Button>
+            </Animatable.View>
           </TouchableOpacity>
-
+          <Animatable.View animation="zoomIn"></Animatable.View>
           <TouchableOpacity >
             <Button transparent light bordered
               style={styles.Btn}
@@ -85,8 +116,8 @@ export default class LoginForm extends Component {
               }
             </Button>
           </TouchableOpacity>
-
         </Form>
+
       </>
     );
   }

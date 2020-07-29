@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import {
   DrawerItem,
   DrawerContentScrollView
@@ -15,14 +15,31 @@ import {
   TouchableRipple,
   Switch,
 } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons ,MaterialIcons} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import styles from './DrawerStyle';
+import Users from '../../core/services/Users';
 
 export default function DrawerContent(props) {
+  const navigation = useNavigation();
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [mail, setMail] = useState();
+  const [lastLogin, setLastLogin] = useState();
 
-const navigation = useNavigation();
-  
+
+  useEffect(() => {
+    async function fetchData() {
+      let data = await Users.GetCurrentUserInfo()
+      setFirstName(data.firstName)
+      setLastName(data.lastName)
+      setMail(data.email)
+      setLastLogin(data.lastLogin)
+ 
+    }
+    fetchData();
+  }, []);
+
   return (
     <DrawerContentScrollView {...props} style={{ marginTop: 50 }}>
       <View
@@ -31,49 +48,38 @@ const navigation = useNavigation();
         }
       >
         <View style={styles.userInfoSection}>
-          <Avatar.Image
+          {/* <Avatar.Image
             source={{
               uri:
                 'https://pbs.twimg.com/profile_images/952545910990495744/b59hSXUd_400x400.jpg',
             }}
             size={50}
-          />
-          <Title style={styles.title}>Dawid Urbaniak</Title>
-          <Caption style={styles.caption}>@trensik</Caption>
-          <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                202
-              </Paragraph>
-              <Caption style={styles.caption}>Following</Caption>
-            </View>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                159
-              </Paragraph>
-              <Caption style={styles.caption}>Followers</Caption>
-            </View>
-          </View>
+          /> */}
+          <Title style={styles.title}>{`${firstName} ${lastName}`}</Title>
+          <Caption style={styles.caption}>{mail}</Caption>
+       
         </View>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons
-                name="account-outline"
+                name="home"
                 color={color}
                 size={size}
               />
             )}
             label="Home"
-            onPress={() => {navigation.push('Home') }}
+            onPress={() => { navigation.push('Home') }}
           />
-          <DrawerItem
+          {/* <DrawerItem
             icon={({ color, size }) => (
-              <MaterialCommunityIcons name="tune" color={color} size={size} />
+              <MaterialIcons name="notifications" color={color}
+              size={size} />
             )}
-            label="Preferences"
-            onPress={() => { }}
-          />
+            label="Notifications"
+            onPress={() => { navigation.push('Notification') }}
+            
+          /> */}
           <DrawerItem
             icon={({ color, size }) => (
               <MaterialCommunityIcons
@@ -83,10 +89,10 @@ const navigation = useNavigation();
               />
             )}
             label="Logout"
-            onPress={() => {navigation.push('Login') }}
+            onPress={() => { navigation.push('Login') }}
           />
         </Drawer.Section>
-        <Drawer.Section title="Preferences">
+        {/* <Drawer.Section title="Preferences">
           <TouchableRipple onPress={() => { }}>
             <View style={styles.preference}>
               <Text>Dark Theme</Text>
@@ -103,51 +109,10 @@ const navigation = useNavigation();
               </View>
             </View>
           </TouchableRipple>
-        </Drawer.Section>
+        </Drawer.Section> */}
       </View>
     </DrawerContentScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-    zIndex: 3,
-  },
-  userInfoSection: {
-    paddingLeft: 20,
-  },
-  title: {
-    marginTop: 20,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  row: {
-    marginTop: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  section: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: 'bold',
-    marginRight: 3,
-  },
-  drawerSection: {
-    marginTop: 15,
-  },
-  preference: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-  },
-});
 
 

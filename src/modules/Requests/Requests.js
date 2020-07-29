@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import Swiper from 'react-native-swiper';
 import { StyleSheet, Dimensions, Text, View, ScrollView } from 'react-native';
-import { Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { Card, Title, Paragraph, FAB, Snackbar } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Cheques from '../../core/services/Cheques';
 import Transactions from '../../core/services/Transactions';
 import Requests from '../../core/services/Requests';
 import Background from '../../Shared/background';
 import Header from '../../Shared/Header/Header';
+import NetworkUtils from '../../core/NetworkUtils ';
 
 
 const styles = StyleSheet.create({
@@ -47,15 +48,21 @@ export default class AllRequests extends Component {
         this.navigation = props.navigation;
         this.state = {
             allRequests: {},
+            connectionStatus:' Loading your Data .......',
 
             isLoading: true
         };
     }
 
     async componentDidMount() {
+        if (await NetworkUtils.isNetworkAvailable()) {
+
         this.setState({ allRequests: await Requests.GetCurrentUserInfo() })
         // console.log("transactions", this.state.allRequests.length)
         this.setState({ isLoading: false });
+        }
+        else this.setState({ connectionStatus: 'check your connections and try again' })
+
     }
     Request = () => {
         return this.state.allRequests.map((value, key) => {
@@ -113,6 +120,12 @@ export default class AllRequests extends Component {
                         <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} /> accepted
                  </Text>
                 </View>
+                <Snackbar
+                    visible={this.state.isLoading}
+                // onDismiss={onDismissSnackBar}
+                >
+                     {this.state.connectionStatus}
+                </Snackbar>
             </Background>
         );
     }

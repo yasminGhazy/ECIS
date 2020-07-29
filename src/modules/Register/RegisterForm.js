@@ -185,6 +185,15 @@ export default class RegisterForm extends React.Component {
                                             top: 20,
 
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
 
                                     }}
                                     Icon={() => {
@@ -201,6 +210,15 @@ export default class RegisterForm extends React.Component {
                                         iconContainer: {
                                             top: 20,
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
 
                                     }}
                                     Icon={() => {
@@ -214,60 +232,25 @@ export default class RegisterForm extends React.Component {
                                         iconContainer: {
                                             top: 20,
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
 
                                     }}
                                     Icon={() => {
                                         return <FontAwesome5 name="file-invoice" size={18} color="#14203E" />
                                     }}
                                 />
-                                {/* <Item picker>
-                                    <FontAwesome name="bank" size={16} color="#14203E" />
-                                    <Picker
-                                        mode="dropdown"
-                                        iosIcon={<Icon name="arrow-down" />}
-                                        style={{ width: undefined }}
-                                        placeholder="currencies"
-                                        placeholderStyle={{ color: "#bfc6ea" }}
-                                        placeholderTextColor="#E5E5E5"
-                                        selectedValue={this.state.branchId}
-                                        onValueChange={(value, index) => this.setState({ branchId: this.props.banks[index].id })}
-                                    >
-                                        {this.setBankRender()}
-                                    </Picker>
-                                </Item>
-                                <Item picker>
-                                    <FontAwesome5 name="file-invoice" size={18} color="#14203E" />
-                                    <Picker
-                                        mode="dropdown"
-                                        iosIcon={<Icon name="arrow-down" />}
-                                        style={{ width: undefined }}
-                                        placeholder="Select Account Type"
-                                        placeholderStyle={{ color: "#E5E5E5" }}
-                                        placeholderTextColor="#E5E5E5"
-                                        // selectedValue={state.selected2}
-                                        onValueChange={(value, index) => this.setState({ currencyId: this.props.currencies[index].id })}
-                                    >
-                                        {this.currenciesRender()}
-                                    </Picker>
-                                </Item>
-                                <Item picker>
-                                    <Foundation name="dollar-bill" size={20} color="#14203E" />
-                                    <Picker
-                                        mode="dropdown"
-                                        iosIcon={<Icon name="arrow-down" />}
-                                        style={{ width: undefined }}
-                                        placeholder="Select Currency"
-                                        placeholderStyle={{ color: "#E5E5E5" }}
-                                        placeholderTextColor="#E5E5E5"
-                                        selectedValue={this.state.accountTypeId}
-                                        onValueChange={(value, index) => this.setState({ accountTypeId: this.props.types[index].id })}
-                                    >
-                                        {this.typeRender()}
-                                    </Picker>
-                                </Item> */}
+                           
                                 <Item style={styles.Item}>
                                     <FontAwesome name="user" size={20} color="#14203E" />
-                                    <Input placeholder='Addresse' placeholderTextColor="#E5E5E5"
+                                    <Input placeholder='Address' placeholderTextColor="#E5E5E5"
                                         onChangeText={(Address) => this.setState({ Address })}
                                     />
                                 </Item>

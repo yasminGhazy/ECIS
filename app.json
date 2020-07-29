@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "myNewProject",
-    "slug": "myNewProject",
+    "name": "ECIS",
+    "slug": "ECIS",
     "ios": {
-      "bundleIdentifier": "com.yasminGhazy.myNewProject",
+      "bundleIdentifier": "com.yasminGhazy.ECIS",
       "buildNumber": "1.0.0"
     },
     "android": {
-      "package": "com.yasminGhazy.myNewProject",
+      "package": "com.yasminGhazy.ECIS",
       "versionCode": 1
     },
     "platforms": [
@@ -17,11 +17,13 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/ecisblack.png",
+    
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor":"#000000",
+      "image": "./assets/logo1.png"
+
     },
     "updates": {
       "fallbackToCacheTimeout": 0

@@ -57,6 +57,19 @@ export default class ChequeBook extends React.Component {
                                         iconContainer: {
                                             top: 20,
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
+                                    }}
+                                    placeholder={{
+                                        label: 'Select account number...',
+
                                     }}
                                     Icon={() => {
                                         return <Foundation name="dollar-bill" size={20} color="#14203E" />
@@ -73,18 +86,30 @@ export default class ChequeBook extends React.Component {
                                         iconContainer: {
                                             top: 20,
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
 
                                     }}
                                     Icon={() => {
                                         return <FontAwesome5 name="file-invoice" size={18} color="#14203E" />
                                     }}
+                                    placeholder={{
+                                        label: 'Select cheque pags number...',
+
+                                    }}
                                 />
 
-
-                                <TouchableOpacity >
+                                <TouchableOpacity onPress={this.RequestCheque}>
                                     <Button transparent light bordered
                                         style={styles.Btn}
-                                        onPress={this.RequestCheque}
+                                        
                                     >
                                         <Text style={styles.color}></Text>
                                     </Button>

@@ -18,7 +18,8 @@ class Beneficiaries {
 
             return data.data.items;
         } catch (err) {
-            return err.response.data.errors;
+            console.log("error")
+            return err.response;
         }
     }
     GetByCurrentUser =async () =>{
@@ -26,6 +27,8 @@ class Beneficiaries {
             const { data } = await http.get(this.route + '/GetByCurrentUser')
             return data.data.items;
         } catch (err) {
+            console.log("error")
+
             return err.response.data.errors;
         }
     }

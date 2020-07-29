@@ -28,10 +28,10 @@ class User {
        
         this.userData = userData;
           
-            console.log("set user" ,cache.get('user'));
+           // console.log("set user" ,cache.get('user'));
             setTimeout(() => { cache.set('user', userData)
         }, 0);
-            console.log("set user2" ,cache.get('user'));
+           // console.log("set user2" ,cache.get('user'));
     }
 
     /**
@@ -43,7 +43,7 @@ class User {
         setTimeout(() => {
           
            cache.remove('user');
-           console.log("get user" ,cache.get('user'));
+           //console.log("get user" ,cache.get('user'));
         }, 0);
     }
 

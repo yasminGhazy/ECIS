@@ -5,10 +5,13 @@ import AccountForm from './AccountForm';
 import { Text, View, StyleSheet } from 'react-native';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import AddAccount from './AddAccount'
-import { Card, FAB, Title, Paragraph, Subheading, Portal, configureFonts,Provider } from 'react-native-paper';
+import { Card, FAB, Title, Paragraph, Subheading, Portal, configureFonts,Provider, Snackbar } from 'react-native-paper';
 import Branches from '../../core/services/Branches'
 import Accounts from '../../core/services/Accounts';
 import ChequeBook from './ChequeBook';
+import DateTest from '../../Shared/Form/DatePicker';
+import BaseComponent from '../../core/BaseComponent';
+import NetworkUtils from '../../core/NetworkUtils ';
 export default class Account extends React.Component {
   constructor(props) {
     super(props);
@@ -20,8 +23,11 @@ export default class Account extends React.Component {
       Reqvisible: false,
       addVisible: false,
       isLoading: true,
+      connectionStatus:' Loading your Data .......',
     };
+ 
   }
+
 
   ReqShowDialog = () =>{this.setState({ Reqvisible: true })}
   ReqHideDialog = () => this.setState({ Reqvisible: false })
@@ -31,12 +37,17 @@ export default class Account extends React.Component {
 
 
   async componentDidMount() {
+    if (await NetworkUtils.isNetworkAvailable()) {
+
     this.setState({ banks: await Branches.getAll() })
     this.setState({ currencies: await Accounts.getCurrencies() })
     this.setState({ types: await Accounts.getAccountTypes() })
     this.setState({ accounts: await Accounts.GetByCurrentUser() })
-    console.log("accounts",this.state.accounts)
+    // console.log("accounts",this.state.accounts)
     this.setState({ isLoading: false })
+    }
+    else this.setState({ connectionStatus: 'check your connections and try again' })
+
   }
   render() {
     return (
@@ -57,6 +68,7 @@ export default class Account extends React.Component {
             <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} /> accepted
       </Text>
         </View>
+      
         <FABGroup
             ReqShowDialog={this.ReqShowDialog}
             AddShowDialog={this.AddShowDialog}
@@ -81,7 +93,12 @@ export default class Account extends React.Component {
           />
           </>}
         </Portal>
-
+        <Snackbar
+                    visible={this.state.isLoading}
+                // onDismiss={onDismissSnackBar}
+                >
+                     {this.state.connectionStatus}
+                </Snackbar>
       </Background>
     );
   }
@@ -116,11 +133,12 @@ function FABGroup(props) {
           <Portal>
               <FAB.Group
                   open={open}
-                  icon={open ? 'calendar-today' : 'plus'}
+                  icon={open ? 'close' : 'plus'}
+                  fabStyle={{ backgroundColor: "white" }}
 
                   actions={[
                       {
-                          icon: 'email',
+                          icon: 'plus',
                           label: 'Add new account',
                           onPress: props.AddShowDialog,
                       },

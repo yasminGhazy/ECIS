@@ -1,11 +1,19 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 import Header from '../../Shared/Header/Header';
 import Background from '../../Shared/background';
 import Swiper from 'react-native-swiper';
-import { StyleSheet, Dimensions, Text, View, ScrollView } from 'react-native';
-import { Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { StyleSheet, Dimensions, View, ScrollView, YellowBox } from 'react-native';
+import { Card, Title, Paragraph, FAB, Portal, Snackbar } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Cheques from '../../core/services/Cheques';
+import { Button, Form, Item, Input, Text } from 'native-base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import CustomDialog from '../../Shared/Dialog/CustomDialog';
+import RNPickerSelect from 'react-native-picker-select';
+import Accounts from '../../core/services/Accounts';
+import Beneficiaries from '../../core/services/Beneficiaries';
+import BaseComponent from '../../core/BaseComponent';
+import NetworkUtils from '../../core/NetworkUtils ';
 
 
 const styles = StyleSheet.create({
@@ -39,22 +47,50 @@ const styles = StyleSheet.create({
     }
 })
 
-export default class EWallet extends Component {
+export default class EWallet extends React.Component {
     constructor(props) {
         super(props);
         this.navigation = props.navigation;
         this.state = {
+            fk_SenderId: '',
+            fk_ReceiverId: '',
+            fk_SenderAccountId: 0,
+            dueDate: '',
+            amount: '',
+            micr: null,
             received: {},
             sent: {},
-            isLoading: true
-        };
-    }
+            Cheque: {},
+            accountNumber: {},
+            beneficiaryName: {},
+            isLoading: true,
+            visible: false,
+            userID: '',
+            showDate:false,
+            connectionStatus:' Loading your Data .......',
 
+        };
+       
+    }
+   
+    showDialog = () => {  this.setState({ visible: true }) }
+    hideDialog = () => this.setState({ visible: false })
+    showDatepicker = () => this.setState({showDate:true});
+     
+   onChangeDatePicker = (selectedDate) => {
+    let currentDate = selectedDate || date;
+    this.setState({dueDate:currentDate})
+  };   
     async componentDidMount() {
+        if (await NetworkUtils.isNetworkAvailable()) {
+         this.setState({ accountNumber: await Accounts.GetByCurrentUser(2) })
         this.setState({ received: await Cheques.GetReceivedChequesByCurrentUser() })
         this.setState({ sent: await Cheques.GetSentChequesByCurrentUser() })
-        console.log("recieved", this.state.sent)
+        this.setState({ beneficiaryName: await Beneficiaries.GetByCurrentUser() })
         this.setState({ isLoading: false });
+        }
+        else this.setState({ connectionStatus: 'check your connections and try again' })
+
     }
     ReceivedCheques = () => {
         return this.state.received.map((value, key) => {
@@ -81,7 +117,7 @@ export default class EWallet extends Component {
         });
     }
     SentCheques = () => {
-        console.log("start")
+
         return this.state.sent.map((value, key) => {
 
             return (
@@ -105,11 +141,44 @@ export default class EWallet extends Component {
             )
         });
     }
+
+    accounts = () => {
+        let arr = [];
+
+        this.state.accountNumber.map((value, key) => {
+
+            arr.push({ label: value.number, value: value.id })
+
+        });
+
+        return arr;
+    }
+    beneficiaryNames = () => {
+        let arr = [];
+
+        this.state.beneficiaryName.map((value, key) => {
+            arr.push({ label: `${value.firstName} ${value.lastName}`, value: value.id })
+            // console.log(value)
+
+        });
+
+        return arr;
+    }
+    SendCheque = async () => {
+        this.setState({ Cheque: await Cheques.GetChequeToSend(this.state.fk_SenderAccountId) })
+        console.log(this.state.Cheque)
+        let Cheque = this.state.Cheque
+        Cheque.fk_ReceiverId = this.state.fk_ReceiverId
+        Cheque.fk_SenderAccountId = this.state.fk_SenderAccountId
+        Cheque.dueDate = "2020-07-22"
+        Cheque.amount = Number(this.state.amount)
+        console.log(await Cheques.SendNewCheque(Cheque))
+    }
     render() {
         return (
-
             <Background>
                 <Header />
+
                 <Swiper style={styles.wrapper} activeDotColor="white" >
 
                     <View style={styles.slide}>
@@ -126,59 +195,99 @@ export default class EWallet extends Component {
 
                         </ScrollView>
                     </View>
-                </Swiper>
-                <MyComponent />
-                <View style={{ margin: 0 }}>
 
-                    <Text style={{ color: "white" }}>
-                        <FontAwesome name="warning" size={16} color="#FFD54F" /> pending
-                 </Text>
-                    <Text style={{ color: "white" }}>
-                        {/* <AntDesign name="warning" size={16} color="#FFD54F" />  */}
-                        <Entypo name="block" size={14} color="#E57373" /> Rejected
-                 </Text>
-                    <Text style={{ color: "white" }}>
-                        <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} /> accepted
-                 </Text>
-                </View>
+                </Swiper>
+                <TouchableOpacity style={{ alignItems: "center" }}  onPress={this.showDialog}>
+                    <Button transparent light bordered
+                        style={{ margin: 30, justifyContent: "center", width: "60%" }}
+                      
+                    >
+                        <Text style={{ color: "white" }}>Send Cheque</Text>
+                    </Button>
+                </TouchableOpacity>
+                {
+                    !this.state.isLoading &&
+
+                    <CustomDialog visible={this.state.visible} onDismiss={this.hideDialog} color="white">
+                        <Form>
+
+                            <RNPickerSelect
+                                onValueChange={(value) => this.setState({ fk_SenderAccountId: value })}
+                                items={this.accounts()}
+                                placeholder={{
+                                    label: 'Select Account number...',
+
+                                }}
+                                style={{
+                                    iconContainer: {
+                                        top: 20,
+
+                                    },
+                                    inputIOS: {
+                                        color: 'black',
+                                        paddingTop: 13,
+                                        paddingHorizontal: 10,
+                                        paddingBottom: 12,
+                                    },
+                                    inputAndroid: {
+                                        color: 'black',
+                                    },
+                                }}
+
+                            />
+                            <RNPickerSelect
+
+                                onValueChange={(value) => this.setState({ fk_ReceiverId: value })}
+                                items={this.beneficiaryNames()}
+                                placeholder={{
+                                    label: 'Select Beneficiary...',
+
+                                }}
+                                style={{
+                                    iconContainer: {
+                                        top: 20,
+                                    },
+                                    inputIOS: {
+                                        color: 'black',
+                                        paddingTop: 13,
+                                        paddingHorizontal: 10,
+                                        paddingBottom: 12,
+                                    },
+                                    inputAndroid: {
+                                        color: 'black',
+                                    },
+                                }}
+                            />
+
+                            <Item style={styles.Item} >
+                                <Input placeholder='Amout'
+                                    placeholderTextColor="#E5E5E5"
+                                    onChangeText={(amount) => this.setState({ amount })}
+                                    keyboardType='numeric'
+                                />
+                            </Item>
+                         
+                            <TouchableOpacity style={{ justifyContent: "center",alignContent:'center' }}  onPress={this.SendCheque}>
+                                <Button transparent light bordered
+                                    style={{ margin: 40 ,color:'black' }}
+                                  
+                                >
+                                    <Text >Send</Text>
+                                </Button>
+                            </TouchableOpacity>
+
+                        </Form>
+                    </CustomDialog>
+                }
+                   <Snackbar
+                    visible={this.state.isLoading}
+                // onDismiss={onDismissSnackBar}
+                >
+                     {this.state.connectionStatus}
+                </Snackbar>
             </Background>
 
 
         );
     }
 }
-
-// export default function EWallet(props) {
-//     return (
-//         <Background>
-//             <CustomHeader />
-//             <SwiperComponent />
-//             <MyComponent />
-//             <View style={{ margin: 10 }}>
-
-//                 <Text style={{ color: "white" }}>
-//                     <FontAwesome name="warning" size={16} color="#FFD54F" /> pending
-//                  </Text>
-//                 <Text style={{ color: "white" }}>
-//                     {/* <AntDesign name="warning" size={16} color="#FFD54F" />  */}
-//                     <Entypo name="block" size={14} color="#E57373" /> Rejected
-//                  </Text>
-//                 <Text style={{ color: "white" }}>
-//                     <AntDesign name="exclamationcircle" size={14} color="#81C784" style={{ margin: 10 }} /> accepted
-//                  </Text>
-//             </View>
-//         </Background>
-//     )
-// }
-export const { width, height } = Dimensions.get('window');
-
-const MyComponent = () => (
-    <FAB
-        style={styles.fab}
-        small
-        icon="plus"
-
-        onPress={() => console.log('Pressed')}
-    />
-);
-

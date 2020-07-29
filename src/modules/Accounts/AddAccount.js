@@ -7,25 +7,10 @@ import { TouchableOpacity, ScrollView, View, StyleSheet } from 'react-native';
 import { Form, Item, Input, Text, Icon, Picker } from 'native-base';
 import { Button, Dialog, TextInput } from 'react-native-paper';
 import RNPickerSelect from 'react-native-picker-select';
-
 import Accounts from '../../core/services/Accounts';
-// const BankAccount {
-//     id: number,
-//     number: string,
-//     balance: number,
-//     currency: Currency,
-//     fk_CurrencyId: number,
-//     creationDate: Date,
-//     availableChequesCount: number,
-//     status: RequestStatus,
-//     requestDate: Date,
-//     responseDate: Date,
-//     accountType: BankAccountType,
-//     user: User,
-//     bank: Bank,
-//     branch: Branch,
-// }
-
+import DateTest from '../../Shared/Form/DatePicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import CustomDialog from '../../Shared/Dialog/CustomDialog';
 
 export default class AddAccount extends React.Component {
     constructor(props) {
@@ -34,16 +19,21 @@ export default class AddAccount extends React.Component {
         this.hideDialog = props.hideDialog;
 
         this.state = {
-            account: {
-                
-            }
+            accountTypeId: '',
+            branchId: '',
+            date: new Date(),
+            mode: 'date',
+            show: false,
+            accountNumber: '',
+            fulldate: new Date(),
+
         };
     }
 
     currency = () => {
         let arr = [];
         this.props.currencies.map((value, key) => {
-            arr.push({ label: value.name, value: value })
+            arr.push({ label: value.name, value: value.id })
         });
         return arr;
     }
@@ -51,7 +41,7 @@ export default class AddAccount extends React.Component {
         let arr = [];
         this.props.banks.map((value, key) => {
             arr.push({ label: value.bank.name, value: value })
-            console.log(value)
+
         });
         return arr;
     }
@@ -64,14 +54,56 @@ export default class AddAccount extends React.Component {
     }
 
     addAccount = async () => {
+
         console.log(await Accounts.AddBankAccount({
-           
-            "Number": this.state.accountNumber,
+
+            "accountType": this.state.accountTypeId,
             "fk_CurrencyId": this.state.currencyId,
-            "branchId": this.state.branchId,
-            "accountTypeId": this.state.accountTypeId
+            "branch": this.state.branchId,
+            "bank": this.state.branchId.bank,
+            "creationDate": this.state.fulldate,
+            "number": this.state.accountNumber
         }));
     };
+
+    onChange = async (event, selectedDate) => {
+        this.setState({ show: false })
+
+        let months = {
+            Jan: 1,
+            Feb: 2,
+            Mar: 3,
+            Apr: 4,
+            May: 5,
+            Jun: 6,
+            Jul: 7,
+            Aug: 8,
+            Sep: 9,
+            Oct: 10,
+            Nov: 11,
+            Dec: 12,
+
+        };
+        let currentDate = selectedDate || this.state.fulldate;
+        if (Platform.OS === 'ios')
+            this.setState({ show: true })
+
+        let year = currentDate.toString().substring(11, 15);
+        let month = currentDate.toString().substring(4, 7);
+        let day = currentDate.toString().substring(8, 10);
+        let fullDate = `${day}-${months[`${month}`]}-${year}`;
+        this.setState({ fullDate });
+        console.log("date", this.state.fullDate)
+
+    };
+    showMode = (currentmode) => {
+        this.setState({ show: true })
+        this.setState({ mode: currentmode })
+    }
+    showDatepicker = () => {
+        this.showMode('date');
+    };
+
 
     render() {
         return (
@@ -81,37 +113,46 @@ export default class AddAccount extends React.Component {
                         <Dialog.Title style={{ color: '#FCA311' }}>Add new bank account</Dialog.Title>
                         <Dialog.Content>
                             <Form>
-
                                 <Item style={styles.Item} >
-                                    <FontAwesome name="user" size={20} color="#14203E" />
-                                    <Input placeholder=' Account Number'
+                                    <FontAwesome5 name="file-invoice" size={20} color="#14203E" style={{ paddingRight: 10 }} />
+                                    <Input placeholder='Account Number'
                                         placeholderTextColor="#E5E5E5"
                                         onChangeText={(accountNumber) => this.setState({ accountNumber })}
+                                        keyboardType="numeric"
                                     />
                                 </Item>
-                                <Item style={styles.Item}>
-                                    <FontAwesome name="user" size={20} color="#14203E" />
-                                    <Input placeholder=' Account Opening Date'
+                                <Item style={styles.Item}  >
+                                    <FontAwesome name="calendar" size={20} color="#14203E" style={{ paddingRight: 10 }} onPress={this.showDatepicker} />
+                                    <Input placeholder='Opening Date : dd-mm-yyyy'
                                         placeholderTextColor="#E5E5E5"
+                                        value={this.state.fullDate}
                                         onChangeText={(date) => this.setState({ date })}
-
                                     />
                                 </Item>
 
                                 <RNPickerSelect
                                     onValueChange={(value) => this.setState({ branchId: value })}
                                     items={this.banks()}
-                                    style={{
+                                    placeholder={{
+                                        label: 'Select a branch...',
 
+                                    }}
+                                    style={{
                                         iconContainer: {
                                             top: 20,
-
                                         },
-
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
                                     }}
                                     Icon={() => {
                                         return <FontAwesome name="bank" size={16} color="#14203E" />
-
 
                                     }}
                                 />
@@ -124,10 +165,23 @@ export default class AddAccount extends React.Component {
                                             top: 20,
 
                                         },
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
 
                                     }}
                                     Icon={() => {
                                         return <Foundation name="dollar-bill" size={20} color="#14203E" />
+                                    }}
+                                    placeholder={{
+                                        label: 'Select a branch...',
+
                                     }}
                                 />
                                 <RNPickerSelect
@@ -137,27 +191,41 @@ export default class AddAccount extends React.Component {
                                         iconContainer: {
                                             top: 20,
                                         },
-
+                                        inputIOS: {
+                                            color: 'black',
+                                            paddingTop: 13,
+                                            paddingHorizontal: 10,
+                                            paddingBottom: 12,
+                                        },
+                                        inputAndroid: {
+                                            color: 'black',
+                                        },
                                     }}
                                     Icon={() => {
                                         return <FontAwesome5 name="file-invoice" size={18} color="#14203E" />
                                     }}
+                                    placeholder={{
+                                        label: 'Select account type  ...',
+
+                                    }}
                                 />
+                                {this.state.show && <>
 
+                                    <DateTimePicker
+                                        value={this.state.fulldate}
+                                        mode={this.state.mode}
 
-                                <TouchableOpacity >
-                                    <Button transparent light bordered
-                                        style={styles.Btn}
-                                        onPress={this.addAccount}
-                                    >
-                                        <Text style={styles.color}></Text>
-                                    </Button>
-                                </TouchableOpacity>
+                                        display="calendar"
+                                        onChange={this.onChange}
+
+                                    />
+                                </>
+                                }
 
                             </Form>
                         </Dialog.Content>
                         <Dialog.Actions>
-                            <Button onPress={this.onRegister} style={{ color: '#FCA311' }}>Create</Button>
+                            <Button onPress={this.addAccount} style={{ color: '#FCA311' }}>Create</Button>
                         </Dialog.Actions>
                     </ScrollView>
                 </Dialog.ScrollArea>

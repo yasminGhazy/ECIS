@@ -75,6 +75,3 @@ class Accounts {
 export default new Accounts();
 
 
-export const account = {
-
-}

@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import Accounts from '../../core/services/Accounts';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import * as Animatable from 'react-native-animatable';
-import { View,Text } from 'native-base';
+import { View, Text } from 'native-base';
 import styles from './HomeStyle';
+import { Snackbar } from 'react-native-paper';
 
 export default class Slider extends Component {
     constructor(props) {
@@ -63,34 +64,37 @@ export default class Slider extends Component {
     }
     render() {
         return (
+            <>
 
-            <View >
-                {!this.state.isLoading &&
-                    <Animatable.View animation="slideInDown">
+                <View >
+                    {!this.state.isLoading &&
+                        <Animatable.View animation="slideInDown">
 
-                        <Carousel
-                            containerCustomStyle={{ alignSelf: "center", marginTop: 30, }}
+                            <Carousel
+                                containerCustomStyle={{ alignSelf: "center", marginTop: 30, }}
 
-                            ref={ref => this.carousel = ref}
-                            data={this.state.carouselItems}
-                            sliderWidth={700}
-                            itemWidth={700}
-                            itemHeight={300}
-                            renderItem={this._renderItem}
-                            autoplay
-                            loop
-                            inactiveSlideScale={0.2}
-                            autoplayInterval={4000}
-                            onSnapToItem={index => this.setState({ activeIndex: index })}
-                            layout={'default'}
-                            layoutCardOffset={0.5}
-                        />
-                        {this.pagination}
-                    </Animatable.View>
+                                ref={ref => this.carousel = ref}
+                                data={this.state.carouselItems}
+                                sliderWidth={700}
+                                itemWidth={700}
+                                itemHeight={300}
+                                renderItem={this._renderItem}
+                                autoplay
+                                loop
+                                inactiveSlideScale={0.2}
+                                autoplayInterval={4000}
+                                onSnapToItem={index => this.setState({ activeIndex: index })}
+                                layout={'default'}
+                                layoutCardOffset={0.5}
+                            />
+                            {this.pagination}
+                        </Animatable.View>
 
-                }
-            </View>
+                    }
 
+                </View>    
+                
+            </>
         );
     }
 }
