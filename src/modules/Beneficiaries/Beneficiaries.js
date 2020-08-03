@@ -2,7 +2,7 @@ import * as  React from 'react';
 import CustomHeader from '../../Shared/Header/Header';
 import Background from '../../Shared/background';
 import { StyleSheet, Text, ScrollView, TouchableOpacity, NetInfo } from 'react-native';
-import { Card, Paragraph, Dialog, Button, Portal, Snackbar } from 'react-native-paper';
+import { Card, Paragraph, Dialog, Button, Portal, Snackbar, HelperText } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Beneficiaries from '../../core/services/Beneficiaries';
 import { Item, Input } from 'native-base';
@@ -11,6 +11,8 @@ import styles from './BeneficiaryStyle';
 import CustomDialog from '../../Shared/Dialog/CustomDialog';
 import NetworkUtils from './../../core/NetworkUtils '
 import BaseComponent from '../../core/BaseComponent';
+import Is from '@flk/supportive-is';
+import { onChange } from 'react-native-reanimated';
 
 export default class Beneficiary extends React.Component {
     constructor(props) {
@@ -24,10 +26,14 @@ export default class Beneficiary extends React.Component {
             visible: false,
             addVisible: false,
             isLoading: true,
-            connectionStatus:' Loading your Data .......',
+            connectionStatus: ' Loading your Data .......',
+            validation: {
+                email: null,
+                valid: null
+            }
         };
     }
-  
+
     BeneficiaryShowDialog = () => { this.setState({ visible: true }) }
     BeneficiaryHideDialog = () => this.setState({ visible: false })
 
@@ -38,13 +44,30 @@ export default class Beneficiary extends React.Component {
         if (await NetworkUtils.isNetworkAvailable()) {
             this.setState({ request: await Beneficiaries.GetUserBeneficiaryRequests() })
             this.setState({ beneficiary: await Beneficiaries.GetByCurrentUser() })
-            console.log(this.state.request);
 
             this.setState({ isLoading: false });
         }
-        else this.setState({connectionStatus:'check your connections and try again'})
+        else this.setState({ connectionStatus: 'check your connections and try again' })
 
     }
+    validateEmail = value => {
+        let input = value.nativeEvent.text;
+        let validation = this.state.validation;
+        validation.email = null;
+        validation.valid = null;
+        if (Is.empty(input)) {
+            validation.email = 'Email address is required'
+        }
+        if (!Is.email(input) && !Is.empty(input)) {
+            validation.email = 'Invalid Email Address'
+        }
+
+        this.setState({
+            validation,
+        })
+
+    };
+
     Beneficiaries = () => {
         return this.state.beneficiary.map((value, key) => {
 
@@ -86,11 +109,14 @@ export default class Beneficiary extends React.Component {
                                     let req = this.state.request[key]
                                     req.status = 2;
                                     await Beneficiaries.RespondToBeneficiaryRequest(req);
+                                    this.componentDidMount()
                                 }}>Approve</Button>
                                 <Button color="#FCA311" onPress={async () => {
                                     let req = this.state.request[key]
                                     req.status = 3;
                                     console.log(await Beneficiaries.RespondToBeneficiaryRequest(req));
+                                    this.componentDidMount()
+
                                 }} >Reject</Button>
 
                             </Card.Actions>
@@ -101,8 +127,17 @@ export default class Beneficiary extends React.Component {
             });
     }
     addAccount = async () => {
-        // console.log()
-        this.setState({ addMsg: await Beneficiaries.AddBeneficiary(this.state.email) });
+        let data = await Beneficiaries.AddBeneficiary(this.state.email);
+        let validation= this.state.validation
+        if (data.succeeded)
+        validation.valid="Request sent successfully"
+            
+        else
+            
+            validation.valid=data.errors[0] 
+
+            this.setState({ validation,  })
+        // this.setState({ addMsg: await Beneficiaries.AddBeneficiary(this.state.email) });
     }
     render() {
         return (
@@ -130,18 +165,28 @@ export default class Beneficiary extends React.Component {
                                     <Input placeholder=' email'
                                         placeholderTextColor="#E5E5E5"
                                         style={{ color: "white" }}
-                                        onChangeText={(email) => this.setState({ email })}
+                                        onChangeText={(email) => { this.setState({ email }) }}
+                                        onChange={(value) => this.validateEmail(value)}
                                     />
                                 </Item>
+                                {this.state.validation.email != null &&
+                                    <HelperText type="error" visible style={{color:"white"}}>
+                                        {this.state.validation.email}
+                                    </HelperText>
+                                }
+                                {this.state.validation.valid != null &&
+                                    <HelperText type="info" visible style={{color:"white"}}>
+                                        {this.state.validation.valid}
+                                    </HelperText>
+                                }
                                 <TouchableOpacity onPress={this.addAccount}>
-                                    <Button transparent light bordered
+                                    <Button transparent bordered
                                         style={{ color: "white" }}
 
                                     >
                                         <Text style={{ color: "white" }}> add</Text>
                                     </Button>
                                 </TouchableOpacity>
-                                <Text style={{ color: "white" }}> {this.state.addMsg[0]}</Text>
                             </CustomDialog>
 
                         </>
@@ -151,7 +196,7 @@ export default class Beneficiary extends React.Component {
                     visible={this.state.isLoading}
                 // onDismiss={onDismissSnackBar}
                 >
-                  {this.state.connectionStatus}
+                    {this.state.connectionStatus}
                 </Snackbar>
             </Background>
         );

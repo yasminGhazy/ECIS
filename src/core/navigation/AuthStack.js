@@ -3,6 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HomeStackNavigator from './HomeStack';
 import Login from '../../modules/Login/Login';
 import DrawerStack from './DrawerStack';
+import RegisterForm from '../../modules/Register/RegisterForm';
 
 
 const AuthStack = createStackNavigator();

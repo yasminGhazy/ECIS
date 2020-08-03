@@ -25,7 +25,7 @@ class Users {
             const  data  = await http.post(this.route + '/Register' , params)
             return ("here",data.status);
         } catch (err) {
-            return err.response.data.errors;
+            return err.response.data;
         }
     }
 

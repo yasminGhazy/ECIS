@@ -3,7 +3,7 @@ import Header from '../../Shared/Header/Header';
 import Background from '../../Shared/background';
 import Swiper from 'react-native-swiper';
 import { StyleSheet, Dimensions, View, ScrollView, YellowBox } from 'react-native';
-import { Card, Title, Paragraph, FAB, Portal, Snackbar } from 'react-native-paper';
+import { Card, Title, Paragraph, FAB, Portal, Snackbar, HelperText } from 'react-native-paper';
 import { FontAwesome, AntDesign, Entypo } from '@expo/vector-icons';
 import Cheques from '../../core/services/Cheques';
 import { Button, Form, Item, Input, Text } from 'native-base';
@@ -66,28 +66,32 @@ export default class EWallet extends React.Component {
             isLoading: true,
             visible: false,
             userID: '',
-            showDate:false,
-            connectionStatus:' Loading your Data .......',
+            showDate: false,
+            connectionStatus: ' Loading your Data .......',
+            validation: {
 
+                valid: null,
+
+            }
         };
-       
+
     }
-   
-    showDialog = () => {  this.setState({ visible: true }) }
+
+    showDialog = () => { this.setState({ visible: true }) }
     hideDialog = () => this.setState({ visible: false })
-    showDatepicker = () => this.setState({showDate:true});
-     
-   onChangeDatePicker = (selectedDate) => {
-    let currentDate = selectedDate || date;
-    this.setState({dueDate:currentDate})
-  };   
+    showDatepicker = () => this.setState({ showDate: true });
+
+    onChangeDatePicker = (selectedDate) => {
+        let currentDate = selectedDate || date;
+        this.setState({ dueDate: currentDate })
+    };
     async componentDidMount() {
         if (await NetworkUtils.isNetworkAvailable()) {
-         this.setState({ accountNumber: await Accounts.GetByCurrentUser(2) })
-        this.setState({ received: await Cheques.GetReceivedChequesByCurrentUser() })
-        this.setState({ sent: await Cheques.GetSentChequesByCurrentUser() })
-        this.setState({ beneficiaryName: await Beneficiaries.GetByCurrentUser() })
-        this.setState({ isLoading: false });
+            this.setState({ accountNumber: await Accounts.GetByCurrentUser(2) })
+            this.setState({ received: await Cheques.GetReceivedChequesByCurrentUser() })
+            this.setState({ sent: await Cheques.GetSentChequesByCurrentUser() })
+            this.setState({ beneficiaryName: await Beneficiaries.GetByCurrentUser() })
+            this.setState({ isLoading: false });
         }
         else this.setState({ connectionStatus: 'check your connections and try again' })
 
@@ -104,12 +108,11 @@ export default class EWallet extends React.Component {
                             {value.status === 3 && <FontAwesome name="warning" size={16} color="#FFD54F" />}
 
                         </Title>
-                        {/* <Subheading style={{ color: "white", fontSize: 20 }}> hey</Subheading> */}
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`from  ${value.sender.firstName} ${value.sender.lastName}`} </Paragraph>
+                        {value.sender !== null &&
+                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`from  ${value.sender.firstName} ${value.sender.lastName}`} </Paragraph>  }
                         <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>   {value.amount}  </Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>reply Date :{value.replyDate}  </Paragraph>
-                        {/* <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>due Date  :{value.dueDate}  </Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>send Date :{value.sendDate}  </Paragraph> */}
+                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>send Date :{value.sendDate.toString().substring(0,10)}  </Paragraph>
+                      
                     </Card.Content>
                 </Card>
 
@@ -129,12 +132,11 @@ export default class EWallet extends React.Component {
                             {value.status === 1 && <FontAwesome name="warning" size={16} color="#FFD54F" />}
                             {value.status === 3 && <Entypo name="block" size={14} color="#E57373" />}
                         </Title>
-                        {/* <Subheading style={{ color: "white", fontSize: 20 }}> hey</Subheading> */}
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`to  ${value.receiver.firstName} ${value.receiver.lastName}`} </Paragraph>
+                        {value.receiver !== null &&
+                            <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>{`to  ${value.receiver.firstName} ${value.receiver.lastName}`} </Paragraph>}
                         <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>   {value.amount}  </Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>reply Date :{value.sendDate}  </Paragraph>
-                        {/* <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>due Date  :{value.dueDate}  </Paragraph>
-                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>send Date :{value.sendDate}  </Paragraph> */}
+                        <Paragraph style={{ color: "white", alignSelf: "center", fontSize: 20 }}>Send Date :{value.sendDate.toString().substring(0, 10)}  </Paragraph>
+
                     </Card.Content>
                 </Card>
 
@@ -166,13 +168,19 @@ export default class EWallet extends React.Component {
     }
     SendCheque = async () => {
         this.setState({ Cheque: await Cheques.GetChequeToSend(this.state.fk_SenderAccountId) })
-        console.log(this.state.Cheque)
         let Cheque = this.state.Cheque
         Cheque.fk_ReceiverId = this.state.fk_ReceiverId
         Cheque.fk_SenderAccountId = this.state.fk_SenderAccountId
-        Cheque.dueDate = "2020-07-22"
+        Cheque.dueDate = "2020-07-22"//
         Cheque.amount = Number(this.state.amount)
-        console.log(await Cheques.SendNewCheque(Cheque))
+        let data = await Cheques.SendNewCheque(Cheque);
+        let validation = this.state.validation
+        if (data.succeeded)
+            validation.valid = "cheque sent "
+        else
+            validation.valid = data[0]
+        console.log("data", data)
+        this.setState({ validation, })
     }
     render() {
         return (
@@ -197,10 +205,10 @@ export default class EWallet extends React.Component {
                     </View>
 
                 </Swiper>
-                <TouchableOpacity style={{ alignItems: "center" }}  onPress={this.showDialog}>
+                <TouchableOpacity style={{ alignItems: "center" }} onPress={this.showDialog}>
                     <Button transparent light bordered
                         style={{ margin: 30, justifyContent: "center", width: "60%" }}
-                      
+
                     >
                         <Text style={{ color: "white" }}>Send Cheque</Text>
                     </Button>
@@ -266,11 +274,16 @@ export default class EWallet extends React.Component {
                                     keyboardType='numeric'
                                 />
                             </Item>
-                         
-                            <TouchableOpacity style={{ justifyContent: "center",alignContent:'center' }}  onPress={this.SendCheque}>
+                            {this.state.validation.valid != null &&
+                                <HelperText type="error" visible>
+                                    {this.state.validation.valid}
+                                </HelperText>
+                            }
+
+                            <TouchableOpacity style={{ justifyContent: "center", alignContent: 'center' }} onPress={this.SendCheque}>
                                 <Button transparent light bordered
-                                    style={{ margin: 40 ,color:'black' }}
-                                  
+                                    style={{ margin: 40, color: 'black' }}
+
                                 >
                                     <Text >Send</Text>
                                 </Button>
@@ -279,11 +292,11 @@ export default class EWallet extends React.Component {
                         </Form>
                     </CustomDialog>
                 }
-                   <Snackbar
+                <Snackbar
                     visible={this.state.isLoading}
                 // onDismiss={onDismissSnackBar}
                 >
-                     {this.state.connectionStatus}
+                    {this.state.connectionStatus}
                 </Snackbar>
             </Background>
 

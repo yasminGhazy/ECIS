@@ -37,7 +37,7 @@ class Cheques {
     }
     SendNewCheque =async (params) => {
         try {
-            const  data  = await http.put(this.route + '/SendNewCheque',params)
+            const  {data}  = await http.put(this.route + '/SendNewCheque',params)
             return data;
         } catch (err) {
             return err.response.data.errors;

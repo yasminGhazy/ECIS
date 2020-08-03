@@ -58,7 +58,7 @@ export default class Login extends React.Component {
 
                     <>
                         <LoginForm onRegister={this.showDialog} navigation={this.props.navigation} isLoading={this.state.isLoading} />
-                        <Portal>
+                        <Portal >
                             {!this.state.isLoading &&
                                 <RegisterForm
                                     visible={this.state.visible}

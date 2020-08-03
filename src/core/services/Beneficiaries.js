@@ -35,10 +35,10 @@ class Beneficiaries {
     
     AddBeneficiary = async(params) => {
         try {
-            const  data  = await http.post(this.route + `/AddBeneficiary?email=${params}` )
+            const  {data}  = await http.post(this.route + `/AddBeneficiary?email=${params}` )
             return data;
         } catch (err) {
-            return err.response.data.errors;
+            return err.response.data;
         }
     }
 
